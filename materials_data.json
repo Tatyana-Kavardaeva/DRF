@@ -1,0 +1,64 @@
+[
+  {
+    "model": "materials.course",
+    "pk": 2,
+    "fields": {
+      "title": "Python",
+      "description": null,
+      "image": ""
+    }
+  },
+  {
+    "model": "materials.course",
+    "pk": 4,
+    "fields": {
+      "title": "Веб-разработчик",
+      "description": null,
+      "image": ""
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 2,
+    "fields": {
+      "course": 2,
+      "title": "lesson_1",
+      "description": null,
+      "image": "",
+      "video": null
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 3,
+    "fields": {
+      "course": 2,
+      "title": "lesson_2",
+      "description": null,
+      "image": "",
+      "video": null
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 4,
+    "fields": {
+      "course": null,
+      "title": "lesson_3",
+      "description": null,
+      "image": "",
+      "video": null
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 5,
+    "fields": {
+      "course": 4,
+      "title": "lesson_1_wd",
+      "description": null,
+      "image": "",
+      "video": null
+    }
+  }
+]
