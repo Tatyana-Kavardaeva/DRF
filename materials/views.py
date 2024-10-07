@@ -22,7 +22,7 @@ class CourseViewSet(ModelViewSet):
         new_lesson.save()
 
     def get_permissions(self):
-        if self.action == ['create']:
+        if self.action == 'create':
             self.permission_classes = (~IsModer,)
         elif self.action in ['update', 'partial_update', 'retrieve']:
             self.permission_classes = (IsOwner | IsModer,)
