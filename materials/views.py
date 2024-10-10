@@ -13,7 +13,7 @@ from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all()
+    queryset = Course.objects.all().order_by('pk')
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = MyPagination
@@ -51,7 +51,7 @@ class LessonCreateAPIView(CreateAPIView):
 
 
 class LessonListAPIView(ListAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by('pk')
     serializer_class = LessonSerializer
     pagination_class = MyPagination
 
