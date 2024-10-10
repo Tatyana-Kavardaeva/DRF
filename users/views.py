@@ -1,10 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, \
+    get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from users.models import User, Payment
-from users.serializers import UserSerializer, PaymentSerializer
+
+from materials.models import Course
+from users.models import User, Payment, Subscription
+from users.serializers import UserSerializer, PaymentSerializer, SubscriptionSerializer
 from rest_framework.permissions import AllowAny
 
 
@@ -50,3 +54,23 @@ class PaymentUpdateAPIView(UpdateAPIView):
 class PaymentDestroyAPIView(DestroyAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+
+
+class SubscriptionCreateAPIView(CreateAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+
+    def post(self, *args, **kwargs):
+        user = self.request.user
+        course_id = self.request.data.get('course_id')  # Исправлено
+        course_item = get_object_or_404(Course, pk=course_id)
+        subs_item = Subscription.objects.filter(user=user, course=course_item)
+
+        if subs_item.exists():
+            subs_item.delete()
+            message = 'Подписка удалена'
+        else:
+            Subscription.objects.create(user=user, course=course_item)
+            message = 'Подписка добавлена'
+
+        return Response({"message": message})
