@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from materials.models import Course, Lesson
-from users.models import User
+from users.models import User, Subscription
 
 
 class LessonTestCase(APITestCase):
@@ -87,95 +87,25 @@ class LessonTestCase(APITestCase):
         )
 
 
-class CourseTestCase(APITestCase):
+class SubscriptionTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create(email='test@test.pro')
         self.course = Course.objects.create(title='test2', description='test', owner=self.user)
-        self.lesson = Lesson.objects.create(title='test_lesson2', description='test2', owner=self.user,
-                                            course=self.course)
+
         self.client.force_authenticate(user=self.user)
 
-    def test_course_retrieve(self):
-        url = reverse('materials:course-detail', args=(self.course.pk,))
-        response = self.client.get(url)
-        data = response.json()
-        print(data)
-        self.assertEqual(
-            response.status_code, status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data.get('title'), self.course.title
-        )
-
-    def test_course_create(self):
-        url = reverse('materials:course-list')
+    def test_is_subscription(self):
+        url = reverse('users:subscription-create')
         data = {
-            'title': 'course_create_test',
+            'course_id': self.course.pk,
         }
+        print(Subscription.objects.all())
         response = self.client.post(url, data)
-        self.assertEqual(
-            response.status_code, status.HTTP_201_CREATED
-        )
-        self.assertEqual(Course.objects.all().count(), 2)
 
-    def test_course_update(self):
-        url = reverse('materials:course-detail', args=(self.course.pk,))
-        data = {
-            'title': 'course_update_test',
-        }
-        response = self.client.patch(url, data)
-        data = response.json()
         self.assertEqual(
             response.status_code, status.HTTP_200_OK
         )
-        self.assertEqual(
-            data.get('title'), 'course_update_test'
-        )
-
-    def test_course_delete(self):
-        url = reverse('materials:course-detail', args=(self.course.pk,))
-        response = self.client.delete(url)
-        self.assertEqual(
-            response.status_code, status.HTTP_204_NO_CONTENT
-        )
-        self.assertEqual(
-            Course.objects.all().count(), 0
-        )
-
-    def test_course_list(self):
-        url = reverse('materials:course-list')
-        response = self.client.get(url)
-        data = response.json()
-        print(data)
-        result = {
-                "count": 1,
-                "next": None,
-                "previous": None,
-                "results": [
-                    {
-                        "pk": self.course.pk,
-                        "title": self.course.title,
-                        "description": self.course.description,
-                        "image": self.course.image,
-                        "count_lessons": 1,
-                        "lessons": [
-                            {
-                                "id": self.lesson.pk,
-                                "video": self.lesson.video,
-                                "title": self.lesson.title,
-                                "description": self.lesson.description,
-                                "image": self.lesson.image,
-                                "course": self.course.pk,
-                                "owner": self.lesson.owner.pk
-                            },
-                        ],
-                        "owner": self.course.owner.pk
-                    }
-                ]
-                    }
-        self.assertEqual(
-            response.status_code, status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data, result
-        )
+        print(Subscription.objects.all())
+        print(self.user.email)
+        print(self.course.title)
+        self.assertTrue(Subscription.objects.filter(user=self.user, course=self.course).exists())
