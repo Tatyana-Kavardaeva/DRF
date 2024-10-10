@@ -1,8 +1,7 @@
-from rest_framework.fields import SerializerMethodField
 from rest_framework import serializers
-
 from materials.models import Course, Lesson
 from materials.validators import validate_allow_links
+from users.models import Subscription
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -16,6 +15,7 @@ class LessonSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     count_lessons = serializers.SerializerMethodField(read_only=True)
     lessons = serializers.SerializerMethodField(read_only=True)
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     def get_count_lessons(self, instance):
         return Lesson.objects.filter(course=instance).count()
@@ -24,6 +24,10 @@ class CourseSerializer(serializers.ModelSerializer):
         lessons = Lesson.objects.filter(course=instance)
         return LessonSerializer(lessons, many=True).data
 
+    def get_is_subscribed(self, instance):
+        user = self.context['request'].user
+        return Subscription.objects.filter(user=user, course=instance).exists()
+
     class Meta:
         model = Course
-        fields = ('pk', 'title', 'description', 'image', 'count_lessons', 'lessons', 'owner')
+        fields = ('pk', 'title', 'description', 'count_lessons', 'lessons', 'owner', 'subscription')
