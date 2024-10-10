@@ -40,8 +40,14 @@ class Payment(models.Model):
         return f"{self.user.email} - {self.amount} - {self.payment_date}"
 
 
-class SUBSCRIPTION(models.Model):
+class Subscription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
-    start_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата начала подписки")
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="Оплаченный курс")
+    subscription_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата подписки", blank=True, null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="Курс")
 
+    class Meta:
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
+
+    def __str__(self):
+        return f"{self.user.email} {self.course.title}"
