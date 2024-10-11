@@ -4,7 +4,7 @@ from materials.validators import validate_allow_links
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    video = serializers.URLField(validators=[validate_allow_links])
+    video = serializers.URLField(validators=[validate_allow_links], required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Lesson
@@ -29,7 +29,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('pk', 'title', 'description', 'count_lessons', 'lessons', 'owner', 'subscription')
+        fields = ('pk', 'title', 'description', 'count_lessons', 'lessons', 'owner', 'is_subscribed')
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
