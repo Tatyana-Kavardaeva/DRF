@@ -4,7 +4,7 @@ from rest_framework.routers import SimpleRouter
 from materials.apps import MaterialsConfig
 from materials.views import (CourseViewSet, LessonCreateAPIView,
                              LessonDestroyAPIView, LessonListAPIView,
-                             LessonRetrieveAPIView, LessonUpdateAPIView)
+                             LessonRetrieveAPIView, LessonUpdateAPIView, SubscriptionCreateAPIView)
 
 app_name = MaterialsConfig.name
 
@@ -21,4 +21,5 @@ urlpatterns = [
     path(
         'lessons/<int:pk>/update/', LessonUpdateAPIView.as_view(), name="lesson-update"
     ),
+    path('subscriptions/', SubscriptionCreateAPIView.as_view(), name='subscription-create'),
 ] + router.urls

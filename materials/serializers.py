@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from materials.validators import validate_allow_links
-from users.models import Subscription
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -31,3 +30,9 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ('pk', 'title', 'description', 'count_lessons', 'lessons', 'owner', 'subscription')
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = '__all__'
