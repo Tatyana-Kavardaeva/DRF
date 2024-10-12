@@ -14,6 +14,7 @@ from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
+    """ Viewset for course. """
     queryset = Course.objects.all().order_by('pk')
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
@@ -41,6 +42,7 @@ class CourseViewSet(ModelViewSet):
 
 
 class LessonCreateAPIView(CreateAPIView):
+    """ Lesson create endpoint """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, ~IsModer]
