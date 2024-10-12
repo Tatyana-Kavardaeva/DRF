@@ -13,7 +13,6 @@ app_name = UsersConfig.name
 
 router = SimpleRouter()
 router.register('', UserViewSet)
-# router.register('subscription', SubscriptionViewSet)
 
 urlpatterns = [
     path("payments/", PaymentListAPIView.as_view(), name="payment-list"),
