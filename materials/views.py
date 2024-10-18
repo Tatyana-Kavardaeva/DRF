@@ -10,6 +10,7 @@ from materials.serializers import CourseSerializer, LessonSerializer, Subscripti
 
 from rest_framework.permissions import IsAuthenticated
 
+from materials.tasks import send_information_about_update_course
 from users.permissions import IsModer, IsOwner
 
 
@@ -39,6 +40,14 @@ class CourseViewSet(ModelViewSet):
         elif self.action == 'destroy':
             self.permission_classes = (~IsModer | IsOwner,)
         return super().get_permissions()
+
+    def update(self, request, *args, **kwargs):
+        course = self.get_object()
+        subscription = Subscription.objects.filter(course=course).first()
+        if subscription:
+            send_information_about_update_course.delay(course.title, subscription.user.email)
+
+        return super().update(request, *args, **kwargs)
 
 
 class LessonCreateAPIView(CreateAPIView):
