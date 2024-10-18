@@ -9,6 +9,21 @@ from users.serializers import UserSerializer, PaymentSerializer
 from rest_framework.permissions import AllowAny
 from users.servicees import create_stripe_sessions, create_stripe_price, create_stripe_product
 
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.utils import timezone
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        user = User.objects.get(email=request.data.get('email'))
+        print(user.email, user.last_login)
+        if user.is_authenticated:
+            user.last_login = timezone.now().date()
+            user.save()
+            print(user.last_login)
+        return response
+
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()

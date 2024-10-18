@@ -3,11 +3,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.routers import SimpleRouter
 from users.apps import UsersConfig
 from users.views import UserViewSet, PaymentListAPIView, PaymentRetrieveAPIView, PaymentCreateAPIView, \
-    PaymentDestroyAPIView, PaymentUpdateAPIView
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+    PaymentDestroyAPIView, PaymentUpdateAPIView, CustomTokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 app_name = UsersConfig.name
 
@@ -24,6 +21,7 @@ urlpatterns = [
     path(
         "payments/<int:pk>/update/", PaymentUpdateAPIView.as_view(), name="payment-update"
     ),
-    path('login/', TokenObtainPairView.as_view(permission_classes=(AllowAny,)), name='login'),
+    # path('login/', TokenObtainPairView.as_view(permission_classes=(AllowAny,)), name='login'),
+    path('login/', CustomTokenObtainPairView.as_view(permission_classes=(AllowAny,)), name='login'),
     path('token/refresh/', TokenRefreshView.as_view(permission_classes=(AllowAny,)), name='token-refresh'),
 ] + router.urls
